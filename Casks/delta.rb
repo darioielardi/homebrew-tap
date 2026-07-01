@@ -1,6 +1,6 @@
 cask "delta" do
-  version "0.11.1"
-  sha256 "e5527ef34344696b18e40e299b87cc3a5915e825adced2d4024a43b2019da0a0"
+  version "0.11.2"
+  sha256 "7f8e512772449c55cc26a247ad54c7650acd20e494b5ced2382c2f5c25646630"
 
   url "https://github.com/darioielardi/delta/releases/download/v#{version}/Delta_#{version}_aarch64.dmg"
   name "Delta"
