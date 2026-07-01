@@ -16,6 +16,21 @@ cask "delta" do
   depends_on macos: :big_sur
 
   app "Delta.app"
+  binary "#{appdir}/Delta.app/Contents/MacOS/Delta", target: "delta"
+
+  # An earlier build's in-app "Install CLI" self-symlinked `delta` onto PATH,
+  # pointing into the app bundle. Homebrew refuses to overwrite that foreign
+  # symlink and would skip linking its own `delta` (the binary stanza above).
+  # preflight runs before artifacts are linked regardless of stanza position, so
+  # clearing the stale link here lets Homebrew's `delta` link land. Only remove
+  # links that resolve into a Delta.app bundle — never git-delta (a Cellar path).
+  preflight do
+    ["/usr/local/bin/delta", "/opt/homebrew/bin/delta", "#{Dir.home}/.local/bin/delta"].each do |p|
+      next unless File.symlink?(p)
+
+      FileUtils.rm(p) if File.readlink(p).include?("/Delta.app/")
+    end
+  end
 
   zap trash: [
     "~/Library/Application Support/com.darioielardi.delta",
